@@ -6,6 +6,7 @@ import { subscribe } from "@/actions/subscribe";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { cn } from "@/lib/utils";
+import { redirect } from "next/navigation";
 
 const Form = () => {
   const form = useForm<z.infer<typeof EmailFormSchema>>({
@@ -17,8 +18,12 @@ const Form = () => {
 
   const onSubmit = async (values: z.infer<typeof EmailFormSchema>) => {
     const res = await subscribe(values.email);
-    console.log(res);
-    form.resetField('email')
+
+    if (res.error) {
+      redirect(`/email-taken?email=${values.email}`);
+    }
+
+    redirect(`/success?email=${values.email}`);
   };
 
   return (
@@ -26,7 +31,7 @@ const Form = () => {
       <div className=" flex items-center justify-center px-4 py-2 rounded-full shadow-md border">
         <input
           {...form.register("email")}
-          className="p-4 w-full h-full focus:outline-none"
+          className="p-4 w-full h-full focus:outline-none focus:bg-white"
           placeholder="Enter your email"
         />
         <button
@@ -37,7 +42,7 @@ const Form = () => {
           type="submit"
           disabled={form.formState.isSubmitting}
         >
-          {form.formState.isSubmitting?'Submitting':'Subscribe'}
+          {form.formState.isSubmitting ? "Submitting" : "Subscribe"}
         </button>
       </div>
     </form>
