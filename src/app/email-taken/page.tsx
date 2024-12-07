@@ -3,7 +3,7 @@
 import {  useSearchParams } from "next/navigation";
 import Image from "next/image";
 
-const page = () => {
+const Page = () => {
   const params = useSearchParams();
   const email = params.get("email");
   console.log(email);
@@ -33,4 +33,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;
